@@ -1,0 +1,13 @@
+[Unit]
+Description=Sample Flask Application
+After=mongod.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+Environment=FLASK_APP=/vagrant/app.py
+ExecStart=/usr/local/bin/flask run
+
+[Install]
+WantedBy=multi-user.target
