@@ -66,5 +66,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     yum -y install python39
     pip3 install flask
+    cp /vagrant/mongodb-org-5.0.repo /etc/yum.repos.d
+    yum -y install mongodb-org
   SHELL
 end
