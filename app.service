@@ -1,13 +1,12 @@
 [Unit]
 Description=Sample Flask Application
-After=mongod.service
+After=mongod.service docker.service
 
 [Service]
 Type=simple
 Restart=always
 RestartSec=5
-Environment=FLASK_APP=/vagrant/app.py
-ExecStart=/usr/local/bin/flask run
+ExecStart=/usr/bin/docker run --publish 5000:5000 odeaver/exampleapp:latest
 
 [Install]
 WantedBy=multi-user.target

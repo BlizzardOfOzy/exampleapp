@@ -13,12 +13,15 @@
     ansible.builtin.systemd:
       name: mongod
       enabled: yes
+      state: started
 
   - name: Add docker repo
     ansible.builtin.yum_repository:
-      name: docker
+      name: docker-ce
       description: Docker Repo
-      baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+      baseurl: https://download.docker.com/linux/centos/8/x86_64/stable
+      gpgcheck: yes
+      gpgkey: https://download.docker.com/linux/centos/gpg
 
   - name: Install docker
     ansible.builtin.yum:
@@ -34,7 +37,7 @@
 
   - name: Copy in app service
     ansible.builtin.copy:
-      source: /vagrant/app.service
+      src: /vagrant/app.service
       dest: /etc/systemd/system
 
   - name: Start app service
@@ -42,3 +45,4 @@
       name: app
       enabled: yes
       state: started
+      daemon-reload: yes

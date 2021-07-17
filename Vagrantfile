@@ -65,7 +65,6 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     yum -y install python39
-    yum -y install gdb
   SHELL
 
   config.vm.provision "ansible_local" do |ansible|
