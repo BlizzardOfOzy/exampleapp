@@ -8,3 +8,16 @@
       name:
         - flask
         - pymongo
+
+  - name: Install mongo
+    become: yes
+    ansible.builtin.yum:
+      name: mongodb-org
+      conf_file: /vagrant/mongodb-org-5.0.repo
+  
+  - name: Enable mongo
+    become: yes
+    ansible.builtin.systemd:
+      name: mongod
+      enabled: yes
+    
