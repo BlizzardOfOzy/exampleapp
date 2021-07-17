@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+
+  tasks:
+  - name: Install python modules
+    ansible.builtin.pip:
+      name:
+        - flask
+        - pymongo

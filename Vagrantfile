@@ -65,7 +65,6 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     yum -y install python39
-    pip3 install flask pymongo ansible
 
     cp /vagrant/mongodb-org-5.0.repo /etc/yum.repos.d
     yum -y install mongodb-org
@@ -75,4 +74,8 @@ Vagrant.configure("2") do |config|
     systemctl daemon-reload
     systemctl enable app
   SHELL
+
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
 end
