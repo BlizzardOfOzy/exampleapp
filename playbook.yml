@@ -1,6 +1,7 @@
 ---
 
 - hosts: all
+  become: yes
 
   tasks:
   - name: Install python modules
@@ -10,14 +11,24 @@
         - pymongo
 
   - name: Install mongo
-    become: yes
     ansible.builtin.yum:
       name: mongodb-org
       conf_file: /vagrant/mongodb-org-5.0.repo
   
   - name: Enable mongo
-    become: yes
     ansible.builtin.systemd:
       name: mongod
       enabled: yes
+  
+  - name: Copy in app service
+    ansible.builtin.copy:
+      src: /vagrant/app.service
+      dest: /etc/systemd/system
+  
+  - name: Enable app
+    ansible.builtin.systemd:
+      name: app
+      enabled: yes
+      daemon-reload: yes
+
     
