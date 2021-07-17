@@ -4,12 +4,6 @@
   become: yes
 
   tasks:
-  - name: Install python modules
-    ansible.builtin.pip:
-      name:
-        - flask
-        - pymongo
-
   - name: Install mongo
     ansible.builtin.yum:
       name: mongodb-org
@@ -19,16 +13,32 @@
     ansible.builtin.systemd:
       name: mongod
       enabled: yes
+
+  - name: Add docker repo
+    ansible.builtin.yum_repository:
+      name: docker
+      description: Docker Repo
+      baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+
+  - name: Install docker
+    ansible.builtin.yum:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
   
+  - name: Start docker
+    ansible.builtin.systemd:
+      name: docker
+      state: started
+
   - name: Copy in app service
     ansible.builtin.copy:
-      src: /vagrant/app.service
+      source: /vagrant/app.service
       dest: /etc/systemd/system
-  
-  - name: Enable app
+
+  - name: Start app service
     ansible.builtin.systemd:
       name: app
       enabled: yes
-      daemon-reload: yes
-
-    
+      state: started
