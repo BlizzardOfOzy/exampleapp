@@ -10,6 +10,12 @@
       ansible.builtin.yum:
         name: mongodb-org
         conf_file: /vagrant/mongodb-org-5.0.repo
+
+    - name: Update configuration
+      ansible.builtin.lineinfile:
+        path: /etc/mongod.conf
+        regexp: "bindIp"
+        line: '  bindIp: 0.0.0.0'
     
     - name: Enable mongo
       ansible.builtin.systemd:
