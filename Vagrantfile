@@ -49,13 +49,10 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = 2
+    vb.memory = 2048
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -69,5 +66,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "playbook.yml"
+    ansible.galaxy_role_file = "requirements.yml"
+    # Needed for galaxy to install collections instead of roles
+    ansible.galaxy_command = "ansible-galaxy collection install -r %{role_file}"
   end
 end

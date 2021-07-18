@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exampleapp-deploy
+spec:
+  selector:
+    matchLabels:
+      app: exampleapp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exampleapp
+    spec:
+      containers:
+      - name: exampleapp
+        image: odeaver/exampleapp:latest
+        ports:
+        - containerPort: 5000
