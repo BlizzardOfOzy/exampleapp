@@ -4,27 +4,9 @@
   become: yes
 
   tasks:
-  - name: Start mongo
-    block:
-    - name: Install mongo
-      ansible.builtin.yum:
-        name: mongodb-org
-        conf_file: /vagrant/mongodb-org-5.0.repo
-
-    - name: Update configuration
-      ansible.builtin.lineinfile:
-        path: /etc/mongod.conf
-        regexp: "bindIp"
-        line: '  bindIp: 0.0.0.0'
-    
-    - name: Enable mongo
-      ansible.builtin.systemd:
-        name: mongod
-        enabled: yes
-        state: started
-
   - name: Install and start docker
     block:
+
     - name: Add docker repo
       ansible.builtin.yum_repository:
         name: docker-ce
@@ -48,8 +30,10 @@
 
   - name: Install Kubernetes
     block:
+
       - name: Turn off swapping
         block:
+
           - name: Get rid of swap device
             ansible.builtin.lineinfile:
               path: /etc/fstab
@@ -66,6 +50,7 @@
 
       - name: Turn on br_netfilter
         block:
+
           - name: Load br_netfilter module on boot
             ansible.builtin.lineinfile:
               path: /etc/modules-load.d/k8s.conf
@@ -94,6 +79,7 @@
         environment:
           KUBECONFIG: /etc/kubernetes/admin.conf
         block:
+
           - name: Add kubernetes repo
             ansible.builtin.yum_repository:
               name: kubernetes
@@ -130,9 +116,51 @@
             ignore_errors: yes
 
           - name: Install flannel network plugin
-            ansible.builtin.shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml      
+            ansible.builtin.shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+          
+          - name: Wait for flannel install
+            ansible.builtin.wait_for:
+              path: /run/flannel/subnet.env
 
   - name: Deploy app on Kubernetes
     environment:
       KUBECONFIG: /etc/kubernetes/admin.conf
     ansible.builtin.shell: kubectl apply -f /vagrant/deployment.yaml
+
+  - name: Install helm
+    block:
+
+    - name: Get install script 
+      ansible.builtin.get_url: 
+        url: https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        dest: /tmp/get_helm.sh
+        mode: 700
+  
+    - name: Run install script
+      ansible.builtin.script:
+        cmd: /tmp/get_helm.sh
+      ignore_errors: yes
+  
+  - name: Install mongo cluster
+    environment:
+      PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+    block:
+
+    - name: Add bitnami repo
+      kubernetes.core.helm_repository:
+        name: bitnami
+        repo_url: https://charts.bitnami.com/bitnami
+
+    - name: Install mongo chart
+      environment:
+          KUBECONFIG: /etc/kubernetes/admin.conf
+      kubernetes.core.helm:
+        name: mongo
+        namespace: default
+        chart_ref: bitnami/mongodb
+        values:
+          persistence:
+            size: 1Gi
+          auth:
+            enabled: false
+      
