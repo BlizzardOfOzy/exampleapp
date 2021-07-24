@@ -1,0 +1,10 @@
+- name: Get install script 
+  ansible.builtin.get_url: 
+    url: https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+    dest: /tmp/get_helm.sh
+    mode: 700
+
+- name: Run install script
+  ansible.builtin.script:
+    cmd: /tmp/get_helm.sh
+  ignore_errors: yes

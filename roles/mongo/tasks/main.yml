@@ -1,0 +1,37 @@
+- name: Install mongo cluster
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+  block:
+  - name: Initialize directories for PersistentVolumes
+    ansible.builtin.file:
+      path: /mnt/{{ item }}
+      state: directory
+      mode: '755'
+    loop:
+      - "data1"
+      - "data2"
+      - "data3"
+
+  - name: Create PersistentVolumes for mongo
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
+    ansible.builtin.shell: kubectl apply -f /vagrant/persistentVolumes.yaml
+
+  - name: Add bitnami repo
+    kubernetes.core.helm_repository:
+      name: bitnami
+      repo_url: https://charts.bitnami.com/bitnami
+
+  - name: Install mongo chart
+    environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+    kubernetes.core.helm:
+      name: mongo
+      namespace: default
+      chart_ref: bitnami/mongodb
+      values:
+        persistence:
+          size: 1Gi
+        auth:
+          enabled: false
+        architecture: "replicaset"
