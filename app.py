@@ -6,7 +6,7 @@ from bson import json_util
 
 app = Flask(__name__)
 
-client = MongoClient(host='mongo-mongodb')
+client = MongoClient(host='mongo-mongodb-headless')
 database = client.database
 
 @app.route("/", methods=['PUT'])

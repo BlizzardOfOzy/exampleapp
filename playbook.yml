@@ -104,6 +104,16 @@
               name: kubelet
               enabled: yes
               state: started
+              
+          - name: Initialize directories for PersistentVolumes
+            ansible.builtin.file:
+              path: /mnt/{{ item }}
+              state: directory
+              mode: '755'
+            loop:
+              - "data1"
+              - "data2"
+              - "data3"
 
           - name: Initialize k8s cluster
             ansible.builtin.shell: kubeadm init --pod-network-cidr=10.244.0.0/16
@@ -163,4 +173,5 @@
             size: 1Gi
           auth:
             enabled: false
+          architecture: "replicaset"
       
