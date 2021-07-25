@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template, redirect, url_for
 from flask import json
 from flask.json import jsonify
 from pymongo import MongoClient
@@ -9,11 +9,13 @@ app = Flask(__name__)
 client = MongoClient(host='mongo-mongodb-headless')
 database = client.database
 
-@app.route("/", methods=['PUT'])
+@app.route("/", methods=['POST'])
 def put_record():
-    database.example.insert_one(request.json)
-    return "Success"
+    new_data = dict(request.form)
+    database.example.insert_one(new_data)
+    return redirect(url_for('get_record'))
 
 @app.route("/", methods=['GET'])
 def get_record():
-    return json_util.dumps({'records': list(database.example.find({}))})
+    return render_template('index.html', data=json_util.dumps({'records': list(database.example.find({}))}))
+        
