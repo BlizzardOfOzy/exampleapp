@@ -2,7 +2,11 @@
 
 - hosts: all
   become: yes
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
   roles:
     - mongo
     - app
+    - prometheus
       

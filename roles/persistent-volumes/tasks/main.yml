@@ -1,0 +1,13 @@
+- name: Initialize directories for PersistentVolumes
+  ansible.builtin.file:
+    path: /mnt/{{ item }}
+    state: directory
+    mode: '755'
+  loop:
+    - "data1"
+    - "data2"
+    - "data3"
+    - "data4"
+
+- name: Create PersistentVolumes for mongo
+  ansible.builtin.shell: kubectl apply -f /vagrant/persistentVolumes.yaml

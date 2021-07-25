@@ -3,8 +3,10 @@ from flask import json
 from flask.json import jsonify
 from pymongo import MongoClient
 from bson import json_util
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 
 client = MongoClient(host='mongo-mongodb-headless')
 database = client.database

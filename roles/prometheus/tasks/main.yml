@@ -1,0 +1,24 @@
+- name: Add prometheus chart repo
+  kubernetes.core.helm_repository:
+    name: prometheus-community
+    repo_url: https://prometheus-community.github.io/helm-charts
+
+- name: Add kube-state-metrics repo
+  kubernetes.core.helm_repository:
+    name: kube-state-metrics
+    repo_url: https://kubernetes.github.io/kube-state-metrics
+
+- name: Install prometheus
+  kubernetes.core.helm:
+    name: prometheus
+    chart_ref: prometheus-community/prometheus
+    release_namespace: default
+    values:
+      alertmanager:
+        enabled: false
+      server:
+        persistentVolume:
+          size: 1Gi
+        service:
+          externalIPs: ["192.168.33.11"]
+            

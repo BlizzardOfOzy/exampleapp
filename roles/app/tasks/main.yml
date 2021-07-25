@@ -1,4 +1,2 @@
 - name: Deploy app on Kubernetes
-  environment:
-    KUBECONFIG: /etc/kubernetes/admin.conf
   ansible.builtin.shell: kubectl apply -f /vagrant/deployment.yaml
