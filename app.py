@@ -8,7 +8,7 @@ from prometheus_flask_exporter import PrometheusMetrics
 app = Flask(__name__)
 metrics = PrometheusMetrics(app)
 
-client = MongoClient(host='mongo-mongodb-headless')
+client = MongoClient(host='mongo-mongodb-headless', replicaset='rs0')
 database = client.database
 
 @app.route("/", methods=['POST'])
