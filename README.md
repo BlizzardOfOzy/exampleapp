@@ -5,6 +5,8 @@ To use, just run "vagrant up --provision". In 5-10 minutes, the application shou
 
 A prometheus server is available on http://192.168.33.11:80. Default flask, mongodb, and kubernetes metrics are available.
 
+A kibana instance with container logs is available at http://192.168.33.10:30000
+
 I've included the app code and Dockerfile, however if you want to update the docker image you'll have to upload it to your own docker image repo and edit the "image" line of deployment.yaml to use it.
 
 ## Dependencies

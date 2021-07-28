@@ -9,4 +9,5 @@
     - mongo
     - app
     - prometheus
+    - elastic
       

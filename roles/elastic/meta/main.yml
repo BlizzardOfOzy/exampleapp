@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: helm
+  - role: kubernetes
+  - role: persistent-volumes

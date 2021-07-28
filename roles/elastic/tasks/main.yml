@@ -1,0 +1,32 @@
+- name: Add elastic repo
+  kubernetes.core.helm_repository:
+    name: elastic
+    repo_url: https://helm.elastic.co
+  
+- name: Install filebeat
+  kubernetes.core.helm:
+    name: filebeat
+    namespace: default
+    chart_ref: elastic/filebeat
+
+- name: Install elasticsearch
+  kubernetes.core.helm:
+    name: elasticsearch
+    namespace: default
+    chart_ref: elastic/elasticsearch
+    values:
+      volumeClaimTemplate:
+        resources:
+          requests:
+            storage: 1Gi
+      antiAffinity: "soft"
+  
+- name: Install kibana
+  kubernetes.core.helm:
+    name: kibana
+    namespace: default
+    chart_ref: elastic/kibana
+    values:
+      service:
+        type: NodePort
+        nodePort: "30000"

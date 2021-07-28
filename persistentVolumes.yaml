@@ -78,3 +78,63 @@ spec:
           operator: In
           values:
           - localhost.localdomain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-5
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: "/mnt/data5"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - localhost.localdomain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-6
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: "/mnt/data6"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - localhost.localdomain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-7
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: "/mnt/data7"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - localhost.localdomain
