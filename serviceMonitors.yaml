@@ -1,0 +1,28 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: exampleapp-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: exampleapp
+  podMetricsEndpoints:
+  - targetPort: 5000
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: mongo-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: metrics
+      app.kubernetes.io/instance: mongo
+      app.kubernetes.io/name: mongodb
+  endpoints:
+  - port: metrics

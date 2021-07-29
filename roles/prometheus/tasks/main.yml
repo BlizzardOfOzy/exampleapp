@@ -11,14 +11,24 @@
 - name: Install prometheus
   kubernetes.core.helm:
     name: prometheus
-    chart_ref: prometheus-community/prometheus
+    chart_ref: prometheus-community/kube-prometheus-stack
     release_namespace: default
     values:
-      alertmanager:
-        enabled: false
-      server:
-        persistentVolume:
-          size: 1Gi
+      prometheusSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 1Gi
+          selector: {}
+      grafana:
         service:
-          externalIPs: ["192.168.33.11"]
-            
+          externalIPs:
+            - "192.168.33.11"
+        grafana.ini:
+          auth.anonymous:
+            enabled: true
+
+- name: Add service monitors
+  ansible.builtin.shell: kubectl apply -f /vagrant/serviceMonitors.yaml        
